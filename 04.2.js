@@ -1,6 +1,5 @@
 import { fileToStringArray, replaceInString, multiplyArray } from "./utils.js";
 
-// const FILE_PATH = "inputs/04.test.2.txt";
 const FILE_PATH = "inputs/04.1.txt";
 
 const tokenize = (fileLine) =>
@@ -30,7 +29,6 @@ const passportsFromInputLines = (inputLines) =>
 const validatePassport = ({ byr, iyr, eyr, hgt, hcl, ecl, pid }) => {
   const validations = {};
 
-  //check byr
   try {
     validations.byr = byr >= 1920 && byr <= 2002;
     validations.iyr = iyr >= 2010 && iyr <= 2020;
