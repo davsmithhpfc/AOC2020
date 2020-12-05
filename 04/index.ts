@@ -1,0 +1,73 @@
+import { fileToStringArray } from '../utils.js';
+
+const FILE_PATH = 'inputs/04.1.txt';
+interface IPassport {
+  byr?: number;
+  iyr?: number;
+  eyr?: number;
+  hgt?: string;
+  hcl?: string;
+  ecl?: string;
+  pid?: string;
+}
+
+interface IPassportValidation {
+  byr?: boolean;
+  iyr?: boolean;
+  eyr?: boolean;
+  hgt?: boolean;
+  hcl?: boolean;
+  ecl?: boolean;
+  pid?: boolean;
+}
+
+const tokenize = (fileLine: string) => fileLine.split('').map((kvPair) => kvPair.split(':'));
+
+const passportsFromInputLines = (inputLines: string[]) =>
+  inputLines.reduce(
+    (acc, cur) => {
+      if (cur === undefined || cur.length === 0) {
+        return acc.concat({});
+      } else {
+        const lastPassport = acc.pop();
+        return acc.concat(Object.fromEntries([...Object.entries(lastPassport), ...tokenize(cur)]));
+      }
+    },
+    [{}]
+  );
+
+const validatePassport = ({ byr, iyr, eyr, hgt, hcl, ecl, pid }: IPassport) => {
+  const validations: IPassportValidation = {};
+
+  try {
+    validations.byr = byr >= 1920 && byr <= 2002;
+    validations.iyr = iyr >= 2010 && iyr <= 2020;
+    validations.eyr = eyr >= 2020 && eyr <= 2030;
+
+    const hgtUnits = hgt.slice(-2);
+    const hgtValue = Number(hgt.substring(0, hgt.length - 2));
+    if (['cm', 'in'].includes(hgtUnits)) {
+      validations.hgt = hgtUnits === 'cm' ? hgtValue >= 150 && hgtValue <= 193 : hgtValue >= 59 && hgtValue <= 76;
+    } else {
+      validations.hgt = false;
+    }
+
+    validations.hcl = !!hcl.match(/^#[0-9a-f]{6}$/i);
+    validations.ecl = ['amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth'].includes(ecl);
+    validations.pid = !!pid.match(/^\d{9}$/);
+
+    return Object.entries(validations).reduce((acc, [key, value]) => acc && value, true);
+  } catch {
+    // nasty catch, muhahahaha
+    return false;
+  }
+};
+
+const run = async () => {
+  const inputArray = await fileToStringArray(FILE_PATH);
+  const passports = passportsFromInputLines(inputArray);
+  const validPassports = passports.map(validatePassport).filter((x) => x);
+  console.log(validPassports.length);
+};
+
+run();

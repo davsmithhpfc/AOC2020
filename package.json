@@ -11,5 +11,8 @@
   "type": "module",
   "dependencies": {
     "eslint": "^7.14.0"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.10"
   }
 }

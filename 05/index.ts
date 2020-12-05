@@ -1,4 +1,4 @@
-import { fileToStringArray } from './utils';
+import { fileToStringArray } from '../utils';
 
 const FILE_PATH = '../inputs/input.txt';
 const SEAT_ROW_COUNT = 128;
