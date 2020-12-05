@@ -1,6 +1,6 @@
 import { fileToStringArray } from '../utils';
 
-const FILE_PATH = '../inputs/input.txt';
+const FILE_PATH = '../../inputs/input.txt';
 const SEAT_ROW_COUNT = 128;
 const SEAT_COLUMN_COUNT = 8;
 
@@ -61,11 +61,10 @@ const findSeatsNextToEmpty = (sortedSeats: ISeat[]) =>
 const run = async () => {
   const inputArray = await fileToStringArray(FILE_PATH);
 
-  const seats = inputArray.map(processBoardingPass);
-  const sortedSeats = seats.sort((a, b) => (a.seatId < b.seatId ? -1 : 1));
+  const sortedSeats = inputArray.map(processBoardingPass).sort((a, b) => (a.seatId < b.seatId ? -1 : 1));
   const seatsNextToEmpty = findSeatsNextToEmpty(sortedSeats);
 
-  console.log(seats.reduce((max, { seatId }) => (seatId > max ? seatId : max), 0));
+  console.log(sortedSeats[sortedSeats.length -1].seatId);
   console.log(seatsNextToEmpty);
 };
 
