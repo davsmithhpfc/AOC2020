@@ -1,0 +1,19 @@
+{
+  "name": "aoc-05",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w"
+  },
+  "devDependencies": {
+    "@types/node": "^12.6.8",
+    "@types/uuid": "^7.0.3",
+    "ts-node": "^8.9.0",
+    "typescript": "^3.5.3"
+  },
+  "dependencies": {
+    "@types/lodash": "^4.14.156",
+    "lodash": "^4.17.15",
+    "uuid": "^7.0.3"
+  }
+}
