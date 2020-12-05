@@ -1,7 +1,5 @@
-import { exception } from 'console';
 import { fileToStringArray } from './utils';
 
-// const FILE_PATH = '../inputs/test.txt';
 const FILE_PATH = '../inputs/input.txt';
 const SEAT_ROW_COUNT = 128;
 const SEAT_COLUMN_COUNT = 8;
