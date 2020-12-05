@@ -15,8 +15,6 @@ const FIELDS = [
   "cid", //(Country ID)
 ];
 
-const OPTIONAL_FIELDS = ["cid"];
-
 const tokenize = (fileLine) => {
   return fileLine.split(" ").map((kvPair) => {
     const [key, value] = kvPair.split(":");
