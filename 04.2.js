@@ -70,7 +70,7 @@ const run = async () => {
   const inputLines = await fileToStringArray(FILE_PATH);
   const passports = passportsFromInputLines(inputLines);
   const validPassports = passports
-    .map((x) => validatePassport(x))
+    .map(validatePassport)
     .filter((x) => x);
   console.log(validPassports.length);
 };
