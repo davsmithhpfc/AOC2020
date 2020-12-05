@@ -4,34 +4,42 @@ const FILE_PATH = '../inputs/input.txt';
 const SEAT_ROW_COUNT = 128;
 const SEAT_COLUMN_COUNT = 8;
 
-type Range = { min: number; max: number };
 enum Direction {
   Front = 'F',
   Back = 'B',
   Left = 'L',
   Right = 'R',
 }
+interface IRange {
+  min: number;
+  max: number;
+}
+interface ISeat {
+  row: number;
+  col: number;
+  seatId: number;
+}
 
-const moveNext = ({ min, max }: Range, direction: Direction) => {
-  return direction === Direction.Front || direction === Direction.Left
+const moveNext = ({ min, max }: IRange, direction: Direction) =>
+  direction === Direction.Front || direction === Direction.Left
     ? { min, max: max - (max - min) / 2 }
     : { min: min + (max - min) / 2, max };
-};
+
+const calcRowColumnRanges = (movementArray: Direction[]) =>
+  movementArray.reduce(
+    (acc, direction) =>
+      direction === Direction.Front || direction === Direction.Back
+        ? { ...acc, row: moveNext(acc.row, direction) }
+        : { ...acc, col: moveNext(acc.col, direction) },
+    {
+      row: { min: 0, max: SEAT_ROW_COUNT },
+      col: { min: 0, max: SEAT_COLUMN_COUNT },
+    }
+  );
 
 const processBoardingPass = (boardingPass: string) => {
   const movementArray = Array.from(boardingPass) as Direction[];
-  const { col, row } = movementArray.reduce(
-    (acc, cur: Direction) => {
-      if ([Direction.Front, Direction.Back].includes(cur)) {
-        const newRowRange = moveNext(acc.row, cur);
-        return { ...acc, row: newRowRange };
-      } else if ([Direction.Left, Direction.Right].includes(cur)) {
-        const newColRange = moveNext(acc.col, cur);
-        return { ...acc, col: newColRange };
-      }
-    },
-    { row: { min: 0, max: SEAT_ROW_COUNT }, col: { min: 0, max: SEAT_COLUMN_COUNT } }
-  );
+  const { col, row } = calcRowColumnRanges(movementArray);
   return {
     row: row.min,
     col: col.min,
@@ -39,12 +47,8 @@ const processBoardingPass = (boardingPass: string) => {
   };
 };
 
-const run = async () => {
-  const inputArray = await fileToStringArray(FILE_PATH);
-
-  const seats = inputArray.map(processBoardingPass);
-  const sortedSeats = seats.sort((a, b) => (a.seatId < b.seatId ? -1 : 1));
-  const seatsNextToEmpty = sortedSeats.reduce((acc, cur, index, arr) => {
+const findSeatsNextToEmpty = (sortedSeats: ISeat[]) =>
+  sortedSeats.reduce((acc, cur, index, arr) => {
     if (!arr[index - 1] || !arr[index + 1]) {
       return acc;
     } else if (arr[index - 1].seatId !== cur.seatId - 1 || arr[index + 1].seatId !== cur.seatId + 1) {
@@ -53,6 +57,13 @@ const run = async () => {
       return acc;
     }
   }, []);
+
+const run = async () => {
+  const inputArray = await fileToStringArray(FILE_PATH);
+
+  const seats = inputArray.map(processBoardingPass);
+  const sortedSeats = seats.sort((a, b) => (a.seatId < b.seatId ? -1 : 1));
+  const seatsNextToEmpty = findSeatsNextToEmpty(sortedSeats);
 
   console.log(seats.reduce((max, { seatId }) => (seatId > max ? seatId : max), 0));
   console.log(seatsNextToEmpty);
