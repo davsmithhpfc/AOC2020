@@ -1,5 +1,5 @@
 {
-  "name": "aoc-04",
+  "name": "aoc-06",
   "version": "1.0.0",
   "scripts": {
     "build": "tsc",
